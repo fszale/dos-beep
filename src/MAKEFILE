@@ -1,0 +1,151 @@
+PROJ = DOSBEEP
+PROJFILE = $(PROJ).MAK
+O = MENU
+O2 = PROCS
+O3 = PROCS2
+O4 = SEND
+O5 = SUBSCRIB
+O6 = SERVICE
+O7 = MODEM
+O8 = GROUPS
+O9 = SETTINGS
+O10 = LOG
+O11 = PREDEF
+O12 = SET
+O13 = PRINT
+O14 = BEEP
+O15 = SERVLIST
+O16 = SETTPROC
+O17 = GRPPROC
+O18 = MODMPROC
+O19 = PROCS3
+O20 = PROCS4
+O21 = SENDPROC
+O22 = MAINPROC
+O23 = MOUSE
+DEBUG = 1
+
+
+PWBRMAKE  = pwbrmake
+NMAKE  = nmake
+LINKER  = link
+ILINK  = ilink
+LRF  = echo > NUL
+BIND  = bind
+RC  = rc
+#IMPLIB  = implib
+LFLAGS_G  =  /NOI /NOE  /BATCH /STACK :30000
+LFLAGS_D  = /CO /SEG:500
+#/CPARM:1
+LFLAGS_R  = /EXE /PACKC /SEG:500 
+#/CPARM:1
+MAPFILE_D  = NUL
+MAPFILE_R  = NUL
+CC  = cl
+CFLAGS_G  = /f- /W4 /AL
+#CFLAGS_G  =  /W4 /AL /Ox
+#CFLAGS_D  = /qc /Gi$(PROJ).mdt /Zr /Zi /Od
+CFLAGS_D  = /Zi /Od /Zr
+#CFLAGS_R  = /Ot /Oi /Ol /Oe /Og /Gs
+CFLAGS_R  = 
+LLIBS_R  = 
+LLIBS_D  = 
+LIBS = c:\work\lib\db\dosapi.lib + cbtree7l.lib + c:\work\lib\com\comlib.lib
+ASM  = masm
+AFLAGS_G  = /Mx /T
+AFLAGS_D  = /Zi
+
+OS  = $(PROJ).obj $(O).obj $(O2).obj $(O3).obj $(O4).obj $(O5).obj $(O6).obj $(O7).obj $(O8).obj $(O9).obj $(O10).obj $(O11).obj $(O12).obj $(O13).obj $(O14).obj $(O15).obj $(O16).obj $(O17).obj $(O18).obj $(O19).obj $(O20).obj $(O21).obj $(O22).obj $(O23).obj
+
+all: $(PROJ).exe
+
+.SUFFIXES: .cpp .obj
+
+$(PROJ).obj : $(PROJ).CPP 
+
+$(O).obj : $(O).CPP 
+
+$(O2).obj : $(O2).CPP 
+
+$(O3).obj : $(O3).CPP 
+
+$(O4).obj : $(O4).CPP 
+
+$(O5).obj : $(O5).CPP 
+
+$(O6).obj : $(O6).CPP 
+
+$(O7).obj : $(O7).CPP 
+
+$(O8).obj : $(O8).CPP 
+
+$(O9).obj : $(O9).CPP 
+
+$(O10).obj : $(O10).CPP 
+
+$(O11).obj : $(O11).CPP 
+
+$(O12).obj : $(O12).CPP 
+
+$(O13).obj : $(O13).CPP 
+
+$(O14).obj : $(O14).CPP 
+
+$(O15).obj : $(O15).CPP 
+
+$(O16).obj : $(O16).CPP 
+
+$(O17).obj : $(O17).CPP 
+
+$(O18).obj : $(O18).CPP 
+
+$(O19).obj : $(O19).CPP 
+
+$(O20).obj : $(O20).CPP 
+
+$(O21).obj : $(O21).CPP 
+
+$(O22).obj : $(O22).CPP 
+
+$(O23).obj : $(O23).CPP 
+
+$(PROJ).bsc : 
+
+$(PROJ).exe : $(OS)
+!IF $(DEBUG)
+        $(LRF) @<<$(PROJ).lrf
+$(RT_OS) $(OS: = +^
+),$@,$(MAPFILE_D),$(LLIBS_G) $(LLIBS_D) $(LIBS),$(DEF_FILE) $(LFLAGS_G) $(LFLAGS_D);
+<<
+!ELSE
+       $(LRF) @<<$(PROJ).lrf
+$(RT_OS) $(OS: = +^
+),$@,$(MAPFILE_R),$(LLIBS_G) $(LLIBS_R) $(LIBS),$(DEF_FILE) $(LFLAGS_G) $(LFLAGS_R);
+<<
+!ENDIF
+!IF $(DEBUG)
+        $(LINKER) @$(PROJ).lrf
+#$(ILINK) -a -e "$(LINKER) @$(PROJ).lrf" $@
+!ELSE
+        $(LINKER) @$(PROJ).lrf
+!ENDIF
+
+
+.cpp.obj :
+!IF $(DEBUG)
+        $(CC) /c $(CFLAGS_G) $(CFLAGS_D) /Fo$@ $<
+!ELSE
+        $(CC) /c $(CFLAGS_G) $(CFLAGS_R) /Fo$@ $<
+!ENDIF
+
+
+run: $(PROJ).exe
+        $(PROJ).exe $(RUNFLAGS)
+
+debug: $(PROJ).exe
+        CV $(CVFLAGS) $(PROJ).exe $(RUNFLAGS)
+
+clean:
+       del *.obj
+       del dosbeep.exe
+
